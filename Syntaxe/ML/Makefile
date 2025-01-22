@@ -8,7 +8,7 @@
 # ==============================================================================
 
 LEX_ML = ocamllex
-YACC_ML = /usr/local/bin/ocamlyacc
+YACC_ML = /usr/bin/ocamlyacc
 OCAMLC = ocamlc
 
 prologTerm: parser prologTerm.ml
