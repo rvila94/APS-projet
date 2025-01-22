@@ -2,29 +2,28 @@ open Ast
   
 let rec print_expr e =
   match e with
-      ASTNum(n)         -> Printf.printf"%d" n
-    | ASTId(x)          -> Printf.printf"%s" x
-    | ASTIf(e1, e2, e3) ->
-    | ASTOr(e1, e2)     ->
-    | ASTAnd(e1, e2)    ->
-    | ASTApp(e, es)     -> (
+      ASTNum(n)         -> Printf.printf("%d" n)
+    | ASTId(x)          -> Printf.printf("%s" x)
+    | ASTIf(e1, e2, e3) -> Printf.printf("TODO (if)")
+    | ASTOr(e1, e2)     -> Printf.printf("TODO (or)")
+    | ASTAnd(e1, e2)    -> Printf.printf("TODO (and)")
+    | ASTApp(e1, es)     -> (
           Printf.printf"app(";
-          print_expr e;
-          Printf.printf",[";
+          print_expr e1;
+          Printf.printf",(";
           print_exprs es;
-          Printf.printf"])"
-      )
-    | ASTAbs(args, e)   ->
+          Printf.printf")"
+    )
+    | ASTAbs(args, e1)   -> Printf.printf("TODO (abstraction fonctionelle)")
       
 and print_exprs es =
   match es with
-      [] -> ()
-    | [e] -> print_expr e
-    | e::es -> (
-	print_expr e;
-	print_char ',';
-	print_exprs es
-      )
+      ASTExpr(e) -> print_expr e
+    | ASTExprs(e, es1) -> (
+	      print_expr e;
+        print_char ',';
+        print_exprs es
+    )
 
 let print_stat s =
   match s with
