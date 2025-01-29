@@ -3,7 +3,15 @@ bt_prog(prog(Cs)) :-
     is_init_env(G).
 
 is_init_env(G) :- 
-    G = [ ("add", fun_t([int_t, int_t]), int_t)].
+    G = [ ("true", bool)],
+    G = [ ("false", bool)],
+    G = [ ("not", astflech([bool]),bool)],
+    G = [ ("eq", astflech([int, int]), bool)],
+    G = [ ("lt", astflech([int, int]), bool)],
+    G = [ ("add", astflech([int, int]), int)],
+    G = [ ("sub", astflech([int, int]), int)],
+    G = [ ("mul", astflech([int, int]), int)],
+    G = [ ("div", astflech([int, int]), int)].
 
 bt_cmds(_,_).
 
