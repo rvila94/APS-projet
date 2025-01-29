@@ -9,8 +9,8 @@
 (* ========================================================================== *)
 
 type typee =
-  ASTBool
-| ASTInt
+  Bool
+| Int
 | ASTFlech of types * typee
 and types =
   ASTType of typee
@@ -18,7 +18,7 @@ and types =
 
 type arg = 
   Arg of string * typee
-and args = 
+type args = 
   ASTArg of arg
 | ASTArgs of arg * args
 

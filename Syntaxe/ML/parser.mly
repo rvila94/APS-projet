@@ -43,8 +43,8 @@ def:
 | FUN REC IDENT typee LBRA args RBRA expr   { ASTFunRec($3, $4, $6, $8) }
 
 typee :
-  BOOL                          { ASTBool }
-| INT                           { ASTInt }
+  BOOL                          { Bool }
+| INT                           { Int }
 | LPAR types FLECH typee RPAR   { ASTFlech($2, $4) }
 
 types:
