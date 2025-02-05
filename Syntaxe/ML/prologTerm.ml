@@ -76,9 +76,9 @@ let rec print_expr e =
       Printf.printf(")");
       )
     | ASTApp(e1, es)    -> (
-      Printf.printf "app(";
+      Printf.printf "app(\"";
       print_expr e1;
-      Printf.printf ",";
+      Printf.printf "\",";
       print_exprs es;
       Printf.printf ")";
       )
@@ -94,9 +94,11 @@ and print_exprs es =
   match es with
       ASTExpr(e) -> print_expr e
     | ASTExprs(e, es1) -> (
+        Printf.printf "[";
         print_expr e;
         Printf.printf ",";
-        print_exprs es1
+        print_exprs es1;
+        Printf.printf "]";
       )
 
 let print_stat s =

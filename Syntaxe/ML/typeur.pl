@@ -9,7 +9,7 @@ extract_typeExprs(G, ES, TS) :-
     ES = [E | ES2],
     TS = [T | TS2], 
     bt_expr(G, E, T),
-    extract_typeExprs(ES2, TS2).
+    extract_typeExprs(G, ES2, TS2).
 
 
 
@@ -21,13 +21,13 @@ bt_prog(prog(CS)) :-
 is_init_env(G) :- 
     G = [ ("true", bool),
      ("false", bool),
-     ("not", flech([bool]),bool),
-     ("eq", flech([int, int]), bool),
-     ("lt", flech([int, int]), bool),
-     ("add", flech([int, int]), int),
-     ("sub", flech([int, int]), int),
-     ("mul", flech([int, int]), int),
-     ("div", flech([int, int]), int)].
+     ("not", flech([bool],bool)),
+     ("eq", flech([int, int], bool)),
+     ("lt", flech([int, int], bool)),
+     ("add", flech([int, int], int)),
+     ("sub", flech([int, int], int)),
+     ("mul", flech([int, int], int)),
+     ("div", flech([int, int], int))].
 
 % Defs
 bt_cmds(G, [def(D) | CS]) :-

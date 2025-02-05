@@ -1,1 +1,1 @@
-[ ECHO (or x y) ]
+[ ECHO ( if (and x y) 1 2 ) ]
