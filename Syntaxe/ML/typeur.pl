@@ -15,27 +15,27 @@ extract_typeExprs(G, ES, TS) :-
 
 % Prog
 bt_prog(prog(CS)) :-
-    bt_cmds(G, CS),
-    is_init_env(G).
+    is_init_env(G),
+    bt_cmds(G, CS).
 
 is_init_env(G) :- 
-    G = [ ("true", bool)],
-    G = [ ("false", bool)],
-    G = [ ("not", flech([bool]),bool)],
-    G = [ ("eq", flech([int, int]), bool)],
-    G = [ ("lt", flech([int, int]), bool)],
-    G = [ ("add", flech([int, int]), int)],
-    G = [ ("sub", flech([int, int]), int)],
-    G = [ ("mul", flech([int, int]), int)],
-    G = [ ("div", flech([int, int]), int)].
+    G = [ ("true", bool),
+     ("false", bool),
+     ("not", flech([bool]),bool),
+     ("eq", flech([int, int]), bool),
+     ("lt", flech([int, int]), bool),
+     ("add", flech([int, int]), int),
+     ("sub", flech([int, int]), int),
+     ("mul", flech([int, int]), int),
+     ("div", flech([int, int]), int)].
 
 % Defs
-bt_cmds(G, def(D, CS)) :-
+bt_cmds(G, [def(D) | CS]) :-
     bt_def(G, D, G2),
     bt_cmds(G2, CS).
 
 % End
-bt_cmds(G, stat(S)) :-
+bt_cmds(G, [stat(S)]) :-
     bt_stat(G, S).
 
 % Const
@@ -64,8 +64,7 @@ bt_stat(G, echo(E)) :-
     bt_expr(G, E, int).
 
 % Num
-bt_expr(G, num(N), int) :-
-    member((N,int), G ).
+bt_expr(_, num(_), int).
 
 % Id
 bt_expr(G, id(X), T) :-
@@ -87,7 +86,7 @@ bt_expr(G, or(E1, E2), bool) :-
     bt_expr(G, E1, bool),
     bt_expr(G, E2, bool).
 
-% App [WIP]
+% App
 bt_expr(G, app(E, ES), T) :-
     Tflech = flech(TS, T),
     bt_expr(G, E, Tflech),
@@ -107,3 +106,4 @@ bt_expr(G, abs(ARGS, E), Tflech) :-
 
 
 % exemple de commande: ./prologTerm ../Samples/prog0.aps | swipl typeur.pl
+% exemple commande dans prolog: bt_prog(prog([stat(echo(num(42)))])).
