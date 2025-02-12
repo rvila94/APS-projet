@@ -1,1 +1,1 @@
-[ ECHO [b : bool, c : int] x ]
+[ ECHO [x : int] x ]

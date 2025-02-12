@@ -76,9 +76,9 @@ let rec print_expr e =
       Printf.printf(")");
       )
     | ASTApp(e1, es)    -> (
-      Printf.printf "app(\"";
+      Printf.printf "app(";
       print_expr e1;
-      Printf.printf "\",";
+      Printf.printf ",";
       print_exprs es;
       Printf.printf ")";
       )
