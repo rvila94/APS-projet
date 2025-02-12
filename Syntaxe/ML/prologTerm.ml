@@ -51,7 +51,7 @@ let rec print_args args =
 let rec print_expr e =
   match e with
       ASTNum(n)         -> Printf.printf "num(%d)" n
-    | ASTId(x)          -> Printf.printf "id(%s)" x
+    | ASTId(x)          -> Printf.printf "id(\"%s\")" x
     | ASTIf(e1, e2, e3) -> (
       Printf.printf("if(");
       print_expr e1;
