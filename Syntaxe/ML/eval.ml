@@ -8,24 +8,46 @@ type valeur =
 
 and environnement = (string * valeur) list
 
-let pi1 id n = 
-          match id with
-              "not" -> if n = 0 then 1 
-                       else if n = 1 then 0
-                            else failwith "erreur: la condition doit etre un bool ( 0 ou 1 )"
-            | _     -> failwith "erreur: cette primitive n'existe pas"
+let initial_env =
+  let not = InPrim (function
+      [InZ(0)] -> InZ(1)
+    | [InZ(1)] -> InZ(0)
+    | _        -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
+  ) in
+  let eq  = InPrim (function
+      [InZ n1; InZ n2] -> InZ (if n1 = n2 then 1 else 0)
+    | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
+  ) in
+  let lt  = InPrim (function
+      [InZ n1; InZ n2] -> InZ (if n1 < n2 then 1 else 0)
+    | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
+  ) in
+  let add = InPrim (function
+      [InZ n1; InZ n2] -> InZ (n1 + n2)
+    | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
+  ) in
+  let prim_sub = InPrim (function
+      [InZ n1; InZ n2] -> InZ (n1 - n2)
+    | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
+  ) in
+  let prim_mul = InPrim (function
+    | [InZ n1; InZ n2] -> InZ (n1 * n2)
+    | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
+  ) in
+  let prim_div = InPrim (function
+      [InZ n1; InZ n2] -> InZ (n1 / n2)
+    | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
+  ) in
 
-let pi2 id n1 n2 = 
-          match id with
-              "eq"  -> if n1 = n2 then 1 else 0
-            | "lt"  -> if n1 < n2 then 1 else 0
-            | "add" -> n1 + n2
-            | "sub" -> n1 - n2
-            | "mul" -> n1 * n2
-            | "div" -> n1 / n2
-            | _     -> failwith "erreur: cette primitive n'existe pas"
+  [("not", not);
+  ("eq", eq);
+  ("lt", lt);
+  ("add", add);
+  ("sub", sub);
+  ("mul", mul);
+  ("div", div);]
 
-
+  
 let rec check_env id env =
   match env with
       []                -> failwith "erreur: pas trouvé "^id^" dans l'environnement global"
