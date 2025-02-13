@@ -47,7 +47,7 @@ let initial_env =
   ("mul", mul);
   ("div", div);]
 
-  
+
 let rec check_env id env =
   match env with
       []                -> failwith "erreur: pas trouvé "^id^" dans l'environnement global"
@@ -59,16 +59,14 @@ let rec add_env id val0 env =
     | (ident, value)::s ->  if (String.equal id ident) then (ident,val0)::s
                             else (ident,value)::(add_env id val0 s)
 
-
-
 let rec eval_expr e env = 
   match e with 
       ASTNum(n)           -> InZ(n)
     | ASTId(s)            -> check_env s env
-    | ASTIf(cond, e1,e2)  ->
-                     match (eval_expr cond env) with
-                        InZ(1) -> e1
-                      | InZ(0) -> e2
+    | ASTIf(e1, e2,e3)  ->
+                     match (eval_expr e1 env) with
+                        InZ(1) -> (eval_expr e2 env)
+                      | InZ(0) -> (eval_expr e3 env)
                       | _      -> failwith "erreur: la condition doit etre un bool ( 0 ou 1 )"
 
     | ASTAnd(e1, e2)      -> 
