@@ -59,15 +59,15 @@ let rec add_env id val0 env =
     | (ident, value)::s ->  if (String.equal id ident) then (ident,val0)::s
                             else (ident,value)::(add_env id val0 s)
 
-let rec eval_expr e env = 
-  match e with 
+let rec eval_expr expr env = 
+  match expr with 
       ASTNum(n)           -> InZ(n)
     | ASTId(s)            -> check_env s env
     | ASTIf(e1, e2,e3)  ->
                      match (eval_expr e1 env) with
                         InZ(1) -> (eval_expr e2 env)
                       | InZ(0) -> (eval_expr e3 env)
-                      | _      -> failwith "erreur: la condition doit etre un bool ( 0 ou 1 )"
+                      | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
 
     | ASTAnd(e1, e2)      -> 
                     match (eval_expr e1 env) with
@@ -76,8 +76,8 @@ let rec eval_expr e env =
                               match (eval_expr e2 env) with 
                                   InZ(0) -> InZ(0)
                                 | InZ(1) -> InZ(1)
-                                | _      -> failwith "erreur: e2 doit etre un bool ( 0 ou 1 )"
-                      | _      -> failwith "erreur: e1 doit etre un bool ( 0 ou 1 )"
+                                | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
+                      | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
 
     | ASTOr(e1, e2)       -> 
                     match (eval_expr e1 env) with
@@ -86,13 +86,37 @@ let rec eval_expr e env =
                               match (eval_expr e2 env) with 
                                   InZ(1) -> InZ(1)
                                 | InZ(0) -> InZ(0)
-                                | _      -> failwith "erreur: e2 doit etre un bool ( 0 ou 1 )"
-                      | _      -> failwith "erreur: e1 doit etre un bool ( 0 ou 1 )"
+                                | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
+                      | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
 
-    | ASTApp(e1, exprs)   -> unit (* TODO *)
-    | ASTAbs(args, e1)    -> unit (* TODO *)
-and eval_exprs es env =
+    | ASTApp(e, es)   -> unit (* TODO *)
+    | ASTAbs(args, e) -> unit (* TODO *)
 
+and eval_exprs exprs env =
+  match exprs with
+      ASTExpr(e)      -> [eval_expr e env]
+    | ASTExprs(e, es) -> eval_expr e env :: eval_exprs es env
+
+
+let eval_stat s env =
+  match s with
+      ASTEcho(e) ->
+              match (eval_expr e env) with
+                  InZ(n) -> [n]
+                | _      -> failwith "erreur: mauvais types, doit etre un entiers"
+
+let rec eval_def d env = unit (* TODO *)
+
+let rec eval_cmds cmds env =
+  match cmds with
+    | ASTStat(s)      -> eval_stat s env
+    | ASTDef(d, cs)   -> unit (* TODO *)
+
+let eval_prog p =
+  match p with
+    | ASTProg(cs) -> eval_cmds cs env_initial
+        
+  
 
 
 (*
