@@ -3,7 +3,7 @@ open Ast
 type valeur =
     InZ  of int
   | InF  of expr * string list * environnement
-  | InFR of expr * string list * string * environnement
+  | InFR of expr * string * string list * environnement
   | InPrim of (valeur list -> valeur)
 
 and environnement = (string * valeur) list
@@ -26,15 +26,15 @@ let initial_env =
       [InZ n1; InZ n2] -> InZ (n1 + n2)
     | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
   ) in
-  let prim_sub = InPrim (function
+  let sub = InPrim (function
       [InZ n1; InZ n2] -> InZ (n1 - n2)
     | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
   ) in
-  let prim_mul = InPrim (function
+  let mul = InPrim (function
     | [InZ n1; InZ n2] -> InZ (n1 * n2)
     | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
   ) in
-  let prim_div = InPrim (function
+  let div = InPrim (function
       [InZ n1; InZ n2] -> InZ (n1 / n2)
     | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
   ) in
@@ -47,6 +47,11 @@ let initial_env =
   ("mul", mul);
   ("div", div);]
 
+
+let extract_args_names args =
+  match args with
+      ASTArg (Arg (x, _)) -> [x]
+    | ASTArgs (Arg (x, _), ags) -> x :: extract_args_names ags
 
 let rec check_env id env =
   match env with
@@ -63,7 +68,7 @@ let rec eval_expr expr env =
   match expr with 
       ASTNum(n)           -> InZ(n)
     | ASTId(s)            -> check_env s env
-    | ASTIf(e1, e2,e3)  ->
+    | ASTIf(e1, e2,e3)    ->
                      match (eval_expr e1 env) with
                         InZ(1) -> (eval_expr e2 env)
                       | InZ(0) -> (eval_expr e3 env)
@@ -89,13 +94,31 @@ let rec eval_expr expr env =
                                 | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
                       | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
 
-    | ASTApp(e, es)   -> unit (* TODO *)
-    | ASTAbs(args, e) -> unit (* TODO *)
+    | ASTApp(e, es)       -> 
+                    let f = eval_expr env e in
+                    let args = eval_exprs env es in
+                    apply f args
+
+    | ASTAbs(args, e)     ->  InF (e, extract_args_names args, env)
 
 and eval_exprs exprs env =
   match exprs with
       ASTExpr(e)      -> [eval_expr e env]
     | ASTExprs(e, es) -> eval_expr e env :: eval_exprs es env
+
+and apply f args =
+  match f with 
+      InPrim prim -> prim args
+    | InF (body, params, env)         ->
+        let new_env = List.fold_left2 (fun param arg env -> add_env param arg env) params args env in   
+        eval_expr body new_env
+
+    | InFR (body, fname, params, env) ->
+        let rec_env = add_env fname (InFR (body, fname, params, env)) env in
+        let new_env = List.fold_left2 (fun param arg env -> add_env param arg env) params args rec_env in
+        eval_expr body new_env
+
+    | _                               -> failwith "erreur: f n'est pas une fonction"
 
 
 let eval_stat s env =
@@ -105,16 +128,30 @@ let eval_stat s env =
                   InZ(n) -> [n]
                 | _      -> failwith "erreur: mauvais types, doit etre un entiers"
 
-let rec eval_def d env = unit (* TODO *)
+let rec eval_def d env = 
+  match d with
+      ASTConst (x, _, e)               ->
+                    let v = eval_expr e env in
+                    add_env x v env
+
+    | ASTFun (fname, _, args, body)    ->
+                    let params = extract_args_names args in
+                    add_env fname InF(body, params, env) env
+
+    | ASTFunRec (fname, _, args, body) ->
+        let params = extract_args_names args in
+        add_env fname InFR(body, fname, params, env) env
 
 let rec eval_cmds cmds env =
   match cmds with
     | ASTStat(s)      -> eval_stat s env
-    | ASTDef(d, cs)   -> unit (* TODO *)
+    | ASTDef(d, cs)   -> 
+                  let new_env = eval_def d env in
+                  eval_cmds cs new_env
 
 let eval_prog p =
   match p with
-    | ASTProg(cs) -> eval_cmds cs env_initial
+    | ASTProg(cs) -> eval_cmds cs initial_env
         
   
 
