@@ -48,14 +48,14 @@ let initial_env =
   ("div", div);]
 
 
-let extract_args_names args =
+let rec extract_args_names args =
   match args with
       ASTArg (Arg (x, _)) -> [x]
     | ASTArgs (Arg (x, _), ags) -> x :: extract_args_names ags
 
-let rec check_env id env =
+let rec check_env id env  : valeur=
   match env with
-      []                -> failwith "erreur: pas trouvé "^id^" dans l'environnement global"
+      []                -> failwith ("erreur: pas trouvé "^id^" dans l'environnement global")
     | (ident, value)::s -> if (String.equal id ident) then value else check_env id s
 
 let rec add_env id val0 env =
@@ -69,13 +69,14 @@ let rec eval_expr expr env =
       ASTNum(n)           -> InZ(n)
     | ASTId(s)            -> check_env s env
     | ASTIf(e1, e2,e3)    ->
-                     match (eval_expr e1 env) with
+                     begin match (eval_expr e1 env) with
                         InZ(1) -> (eval_expr e2 env)
                       | InZ(0) -> (eval_expr e3 env)
                       | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
+                     end
 
     | ASTAnd(e1, e2)      -> 
-                    match (eval_expr e1 env) with
+                    begin match (eval_expr e1 env) with
                         InZ(0) -> InZ(0)
                       | InZ(1) -> 
                               match (eval_expr e2 env) with 
@@ -83,9 +84,10 @@ let rec eval_expr expr env =
                                 | InZ(1) -> InZ(1)
                                 | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
                       | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
+                    end
 
     | ASTOr(e1, e2)       -> 
-                    match (eval_expr e1 env) with
+                    begin match (eval_expr e1 env) with
                         InZ(1) -> InZ(1)
                       | InZ(0) -> 
                               match (eval_expr e2 env) with 
@@ -93,6 +95,7 @@ let rec eval_expr expr env =
                                 | InZ(0) -> InZ(0)
                                 | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
                       | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
+                    end
 
     | ASTApp(e, es)       -> 
                     let f = eval_expr env e in
@@ -156,9 +159,9 @@ let eval_prog p =
   
 
 
-(*
+
 let _ =
   let lexbuf = Lexing.from_channel stdin in
   let ast = Parser.prog Lexer.token lexbuf in
-  eval ....
-*)
+  let _ = eval_prog ast in
+  flush stdout
