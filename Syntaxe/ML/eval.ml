@@ -8,6 +8,8 @@ type valeur =
 
 and environnement = (string * valeur) list
 
+type flux_sortie = int list
+
 let initial_env =
   let not = InPrim (function
       [InZ(0)] -> InZ(1)
@@ -78,28 +80,30 @@ let rec eval_expr expr env =
     | ASTAnd(e1, e2)      -> 
                     begin match (eval_expr e1 env) with
                         InZ(0) -> InZ(0)
-                      | InZ(1) -> 
+                      | InZ(1) -> (
                               match (eval_expr e2 env) with 
                                   InZ(0) -> InZ(0)
                                 | InZ(1) -> InZ(1)
                                 | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
+                      )
                       | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
                     end
 
     | ASTOr(e1, e2)       -> 
                     begin match (eval_expr e1 env) with
                         InZ(1) -> InZ(1)
-                      | InZ(0) -> 
+                      | InZ(0) -> (
                               match (eval_expr e2 env) with 
                                   InZ(1) -> InZ(1)
                                 | InZ(0) -> InZ(0)
                                 | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
+                      )
                       | _      -> failwith "erreur: mauvais type, doit etre un bool ( 0 ou 1 )"
                     end
 
     | ASTApp(e, es)       -> 
-                    let f = eval_expr env e in
-                    let args = eval_exprs env es in
+                    let f = eval_expr e env in
+                    let args = eval_exprs es env in
                     apply f args
 
     | ASTAbs(args, e)     ->  InF (e, extract_args_names args, env)
@@ -113,23 +117,23 @@ and apply f args =
   match f with 
       InPrim prim -> prim args
     | InF (body, params, env)         ->
-        let new_env = List.fold_left2 (fun param arg env -> add_env param arg env) params args env in   
+        let new_env = List.fold_left2 (fun env param arg -> add_env param arg env) env params args in   
         eval_expr body new_env
 
     | InFR (body, fname, params, env) ->
         let rec_env = add_env fname (InFR (body, fname, params, env)) env in
-        let new_env = List.fold_left2 (fun param arg env -> add_env param arg env) params args rec_env in
+        let new_env = List.fold_left2 (fun env param arg -> add_env param arg env) rec_env params args in
         eval_expr body new_env
 
-    | _                               -> failwith "erreur: f n'est pas une fonction"
+    | _ -> failwith "erreur: f n'est pas une fonction"
 
 
-let eval_stat s env =
+let eval_stat s env flux =
   match s with
       ASTEcho(e) ->
               match (eval_expr e env) with
-                  InZ(n) -> [n]
-                | _      -> failwith "erreur: mauvais types, doit etre un entiers"
+                  InZ(n) -> (n :: flux) 
+                | _      -> failwith "erreur: mauvais types, doit etre un entier"
 
 let rec eval_def d env = 
   match d with
@@ -139,29 +143,31 @@ let rec eval_def d env =
 
     | ASTFun (fname, _, args, body)    ->
                     let params = extract_args_names args in
-                    add_env fname InF(body, params, env) env
+                    add_env fname (InF(body, params, env)) env
 
     | ASTFunRec (fname, _, args, body) ->
         let params = extract_args_names args in
-        add_env fname InFR(body, fname, params, env) env
+        add_env fname (InFR(body, fname, params, env)) env
 
-let rec eval_cmds cmds env =
+let rec eval_cmds cmds env flux =
   match cmds with
-    | ASTStat(s)      -> eval_stat s env
+    | ASTStat(s)      -> eval_stat s env flux
     | ASTDef(d, cs)   -> 
                   let new_env = eval_def d env in
-                  eval_cmds cs new_env
+                  eval_cmds cs new_env flux
 
 let eval_prog p =
   match p with
-    | ASTProg(cs) -> eval_cmds cs initial_env
-        
+    | ASTProg(cs) -> 
+              let flux = (eval_cmds cs initial_env []) in
+              List.iter (function x -> Printf.printf "%d\n" x) (List.rev flux)
+         
   
 
 
 
 let _ =
   let lexbuf = Lexing.from_channel stdin in
-  let ast = Parser.prog Lexer.token lexbuf in
-  let _ = eval_prog ast in
-  flush stdout
+  let p = Parser.prog Lexer.token lexbuf in
+  ( eval_prog p )
+

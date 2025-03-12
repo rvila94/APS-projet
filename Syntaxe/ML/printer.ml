@@ -127,6 +127,7 @@ let rec print_cmds cs =
       ASTStat(s) -> print_stat s
     | ASTDef(d, cmds) ->( 
           print_def d; 
+          Printf.printf "; ";
           print_cmds cmds
       )
 let print_prog p =
