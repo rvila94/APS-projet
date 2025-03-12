@@ -1,5 +1,9 @@
 open Ast
 
+
+(* printer de APS0, non mis a jour *)
+
+
 let rec print_type t =
   match t with 
       Bool           -> Printf.printf "bool"

@@ -34,20 +34,31 @@ and exprs =
     ASTExpr of expr
   | ASTExprs of expr * exprs
 
-type stat =
-  ASTEcho of expr
-
 type def =
-    ASTConst of string * typee * expr
-  | ASTFun of string * typee * args * expr
-  | ASTFunRec of string * typee * args * expr
+  ASTConst of string * typee * expr
+| ASTFun of string * typee * args * expr
+| ASTFunRec of string * typee * args * expr
+| ASTVar of string * typee
+| ASTProc of string * args * block
+| ASTProcRec of string * args * block
 
-type cmds =
+and stat =
+  ASTEcho of expr
+| ASTSet of string * expr
+| ASTIf2 of expr * block * block
+| ASTWhile of expr * block
+| ASTCall of string * exprs
+  
+and cmds =
     ASTStat of stat
   | ASTDef of def * cmds
+  | ASTStat2 of stat * cmds
+
+and block =
+  ASTBlock of cmds
 
 type prog =
-  ASTProg of cmds
+  ASTProg of block
 
 
 

@@ -18,29 +18,37 @@ open Ast
 %token LPAR RPAR 
 %token LBRA RBRA
 %token PVIR DEUXP VIR ASTER FLECH
-%token CONST FUN REC ECHO
+%token CONST FUN REC VAR PROC 
+%token ECHO SET IF2 WHILE CALL
 %token IF AND OR BOOL INT
 
 %type <Ast.expr> expr
 %type <Ast.exprs> exprs
 %type <Ast.cmds> cmds
 %type <Ast.prog> prog
+%type <Ast.prog> block
 
 %start prog
 
 %%
-prog: LBRA cmds RBRA            { ASTProg($2) }
+prog: block            { ASTProg($1) }  
+;
+
+block: LBRA cmds RBRA  { ASTProg($2) }
 ;
 
 cmds:
   stat                          { ASTStat($1) }
 | def PVIR cmds                 { ASTDef($1, $3) }
-;
+| stat PVIR cmds                { ASTStat2($1, $3) }
 
 def:
   CONST IDENT typee expr                    { ASTConst($2, $3, $4) }
 | FUN IDENT typee LBRA args RBRA expr       { ASTFun($2, $3, $5, $7) }
 | FUN REC IDENT typee LBRA args RBRA expr   { ASTFunRec($3, $4, $6, $8) }
+| VAR IDENT type                            { ASTVar($2, $3) }
+| PROC IDENT LBRA args RBRA block           { ASTProc{$2, $4, $6} }
+| PROC REC IDENT LBRA args RBRA block       { ASTProc{$3, $5, $7} }
 
 typee :
   BOOL                          { Bool }
@@ -60,6 +68,10 @@ arg:
 
 stat:
   ECHO expr                     { ASTEcho($2) }
+| SET IDENT expr                { ASTSet($2, $3) }
+| IF2 expr block block          { ASTIf2($2, $3, $4) }
+| WHILE expr block              { ASTWhile($2, $3) }
+| CALL IDENT expr               { ASTCall($2, $3) }
 ;
 
 expr:

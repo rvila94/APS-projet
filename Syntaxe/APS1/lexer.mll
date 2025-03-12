@@ -26,8 +26,14 @@ rule token = parse
   | "->"             { FLECH }
   | "CONST"          { CONST }
   | "FUN"            { FUN }  
-  | "REC"            { REC }     
+  | "REC"            { REC }   
+  | "VAR"            { VAR }  
+  | "PROC"           { PROC } 
   | "ECHO"           { ECHO }  
+  | "SET"            { SET }  
+  | "IF"             { IF2 }  
+  | "WHILE"          { WHILE }  
+  | "CALL"           { CALL }  
   | "if"             { IF }    
   | "and"            { AND }  
   | "or"             { OR }  
