@@ -38,7 +38,8 @@ rule token = parse
   | "and"            { AND }  
   | "or"             { OR }  
   | "bool"           { BOOL }  
-  | "int"            { INT }  
+  | "int"            { INT } 
+  | "void"           { VOID } 
   | ('-')?['0'-'9']+ as lxm { NUM(int_of_string lxm) }
   | ['a'-'z''A'-'Z']['a'-'z''A'-'Z''0'-'9']* as lxm { IDENT(lxm) }
   | eof              { raise Eof }

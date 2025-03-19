@@ -11,6 +11,7 @@
 type typee =
   Bool
 | Int
+| Void  (* pas nécessaire *)
 | ASTFlech of types * typee
 and types =
   ASTType of typee
