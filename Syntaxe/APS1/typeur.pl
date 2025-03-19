@@ -16,7 +16,7 @@ extract_typeExprs(G, ES, TS) :-
 % Prog
 bt_prog(prog(CS)) :-
     is_init_env(G),
-    bt_cmds(G, CS).
+    bt_block(G, CS).
 
 is_init_env(G) :- 
     G = [ ("true", bool),
@@ -29,10 +29,19 @@ is_init_env(G) :-
      ("mul", flech([int, int], int)),
      ("div", flech([int, int], int))].
 
+% Bloc
+bt_block(G, block(CMDS)) :-
+    bt_cmds(G, CMDS).
+
 % Defs
 bt_cmds(G, [def(D) | CS]) :-
     bt_def(G, D, G2),
     bt_cmds(G2, CS).
+
+% Stats
+bt_cmds(G, [stat(S) | CS]) :-
+    bt_stat(G, S),
+    bt_cmds(G, CS).
 
 % End
 bt_cmds(G, [stat(S)]) :-
@@ -57,11 +66,56 @@ bt_def(G, funRec(X, T, ARGS, E), Gfinal) :-
     Gfinal = [(X, Tflech) | G],
     Tflech = flech(TS, T),
     extract_typeArgs(ARGS, TS),
-    G3 = [(X, Tflech) | G2].    % tester de remlacer ca par append((X, Tflech), G2, G3)
+    G3 = [(X, Tflech) | G2].    % à tester de remplacer ca par append((X, Tflech), G2, G3)
+
+
+% Var
+bt_def(G, var(X, T), [(X, T) | G]) :- 
+    member(T, [int, bool]).
+
+% Proc
+bt_def(G, proc(X, Args, Block), Gfinal) :-
+    extract_typeArgs(Args, TS),
+    append(Args, G, G2),
+    bt_block(G2, Block),
+    Tflech = flech(TS, void),
+    Gfinal = [(X, Tflech) | G].
+
+% ProcRec
+bt_def(G, procRec(X, Args, Block), Gfinal) :-
+    extract_typeArgs(Args, TS),
+    Tflech = flech(TS, void),
+    append([(X, Tflech) | Args], G, G2),
+    bt_block(G2, Block),
+    Gfinal = [(X, Tflech) | G].
 
 % Echo
 bt_stat(G, echo(E)) :-
     bt_expr(G, E, int).
+
+% Set
+bt_stat(G, set(X, E)) :-
+    member((X, T), G),
+    bt_expr(G, E, T). 
+
+% If2
+bt_stat(G, if2(E, Bk1, Bk2)) :-
+    bt_expr(G, E, bool),
+    bt_block(G, Bk1),
+    bt_block(G, Bk2).
+
+% While
+bt_stat(G, whilee(E, Bk)) :-
+    bt_expr(G, E, bool),
+    bt_block(G, Bk).
+
+% Call
+bt_stat(G, call(X, ES)) :-
+    extract_typeExprs(G, ES, TS),
+    member((X, flech(TS, void)), G).
+    
+% Void
+bt_expr(_, void, void).
 
 % Num
 bt_expr(_, num(_), int).

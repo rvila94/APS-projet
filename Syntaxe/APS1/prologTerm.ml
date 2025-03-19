@@ -108,6 +108,11 @@ let print_stat s =
           print_expr(e);
           Printf.printf(")")
       )
+      ASTSet(s, e) -> (
+          Printf.printf("set(");
+          print_expr(e);
+          Printf.printf ",%s)"  s;
+      )
 
 let print_def d =
   match d with 
