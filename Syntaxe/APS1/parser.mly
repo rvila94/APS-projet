@@ -26,7 +26,7 @@ open Ast
 %type <Ast.exprs> exprs
 %type <Ast.cmds> cmds
 %type <Ast.prog> prog
-%type <Ast.prog> block
+%type <Ast.block> block
 
 %start prog
 
@@ -46,7 +46,7 @@ def:
   CONST IDENT typee expr                    { ASTConst($2, $3, $4) }
 | FUN IDENT typee LBRA args RBRA expr       { ASTFun($2, $3, $5, $7) }
 | FUN REC IDENT typee LBRA args RBRA expr   { ASTFunRec($3, $4, $6, $8) }
-| VAR IDENT type                            { ASTVar($2, $3) }
+| VAR IDENT typee                            { ASTVar($2, $3) }
 | PROC IDENT LBRA args RBRA block           { ASTProc($2, $4, $6) }
 | PROC REC IDENT LBRA args RBRA block       { ASTProc($3, $5, $7) }
 

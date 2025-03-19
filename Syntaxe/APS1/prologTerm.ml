@@ -13,6 +13,7 @@ let rec print_type t =
   match t with 
       Bool           -> Printf.printf "bool"
     | Int            -> Printf.printf "int"
+    | Void           -> Printf.printf "void"
     | ASTFlech(ts, t1)  -> (
       Printf.printf "astflech";
       Printf.printf "([";
@@ -101,20 +102,45 @@ and print_exprs es =
         Printf.printf "]";
       )
 
-let print_stat s =
+let rec print_stat s =
   match s with
       ASTEcho e -> (
           Printf.printf("echo(");
           print_expr(e);
           Printf.printf(")")
       )
-      ASTSet(s, e) -> (
+    |  ASTSet(s, e) -> (
           Printf.printf("set(");
+          Printf.printf "%s"  s;
+          Printf.printf ",";
           print_expr(e);
-          Printf.printf ",%s)"  s;
+          Printf.printf ")";
+      )
+    |  ASTIf2(e, bk1, bk2) -> (
+          Printf.printf("if2(");
+          print_expr(e);
+          Printf.printf(",");
+          print_block(bk1);
+          Printf.printf(",");
+          print_block(bk2);
+          Printf.printf ")";
+      )
+    |  ASTWhile(e, bk) -> (
+          Printf.printf("while(");
+          print_expr(e);
+          Printf.printf(",");
+          print_block(bk);
+          Printf.printf ")";
+      )
+    |  ASTCall(s, es) -> (
+          Printf.printf("call(");
+          Printf.printf "%s"  s;
+          Printf.printf ",";
+          print_exprs(es);
+          Printf.printf ")";
       )
 
-let print_def d =
+and print_def d =
   match d with 
     ASTConst(s, t, e)     -> (
         Printf.printf "const(";
@@ -147,8 +173,35 @@ let print_def d =
         print_expr e;
         Printf.printf ")";
     )
+  | ASTVar(s, t) -> (
+        Printf.printf "var(";
+        Printf.printf "%s"  s;
+        Printf.printf ",";
+        print_type t; 
+        Printf.printf ")";
+  )
+  | ASTProc(s, a, bk) -> (
+        Printf.printf "proc(";
+        Printf.printf "%s" s;
+        Printf.printf ",";
+        Printf.printf ",[";
+        print_args a;
+        Printf.printf "],";
+        print_block bk;
+        Printf.printf ")";
+    )
+  | ASTProcRec(s, a, bk) -> (
+        Printf.printf "procrec(";
+        Printf.printf "%s" s;
+        Printf.printf ",";
+        Printf.printf ",[";
+        print_args a;
+        Printf.printf "],";
+        print_block bk;
+        Printf.printf ")";
+    )
 
-let rec print_cmds c =
+and print_cmds c =
   match c with
       ASTStat s -> (
         Printf.printf "stat(";
@@ -161,13 +214,28 @@ let rec print_cmds c =
           Printf.printf "),";
           print_cmds cmds
         )
+      | ASTStat2(s, cmds) -> ( 
+        Printf.printf "stat(";
+          print_stat s; 
+          Printf.printf "),";
+          print_cmds cmds
+        )
+
+and print_block bk =
+  match bk with
+      ASTBlock(cs) -> (
+        Printf.printf "[";
+        print_cmds cs;
+        Printf.printf "]";
+      )
+
 	
 let print_prog p =
   match p with
-      ASTProg(cs) -> (
-          Printf.printf "prog([";
-          print_cmds cs;
-          Printf.printf "])"
+      ASTProg(bk) -> (
+          Printf.printf "prog(";
+          print_block bk;
+          Printf.printf ")"
       )
 ;;
 	
