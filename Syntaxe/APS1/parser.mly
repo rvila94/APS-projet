@@ -34,7 +34,7 @@ open Ast
 prog: block            { ASTProg($1) }  
 ;
 
-block: LBRA cmds RBRA  { ASTProg($2) }
+block: LBRA cmds RBRA  { ASTBlock($2) }
 ;
 
 cmds:
