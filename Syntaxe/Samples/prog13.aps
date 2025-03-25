@@ -1,7 +1,1 @@
-[
-    VAR x int;
-    VAR y int;
-    SET x 42;
-    SET y 100;
-    ECHO (add (mul 42 x) (sub (div y 2) 42))
-]
+[ VAR x int; VAR y int; SET x 42; SET y 100; ECHO (add 42 100) ]

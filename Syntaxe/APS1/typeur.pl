@@ -30,8 +30,8 @@ is_init_env(G) :-
      ("div", flech([int, int], int))].
 
 % Bloc
-bt_block(G, block(CMDS)) :-
-    bt_cmds(G, CMDS).
+bt_block(G, block(CS)) :-
+    bt_cmds(G, CS).
 
 % Defs
 bt_cmds(G, [def(D) | CS]) :-

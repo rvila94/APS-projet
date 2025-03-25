@@ -126,7 +126,7 @@ let rec print_stat s =
           Printf.printf ")";
       )
     |  ASTWhile(e, bk) -> (
-          Printf.printf("while(");
+          Printf.printf("whilee(");
           print_expr(e);
           Printf.printf(",");
           print_block(bk);
@@ -224,9 +224,9 @@ and print_cmds c =
 and print_block bk =
   match bk with
       ASTBlock(cs) -> (
-        Printf.printf "[";
+        Printf.printf "block([";
         print_cmds cs;
-        Printf.printf "]";
+        Printf.printf "])";
       )
 
 	
