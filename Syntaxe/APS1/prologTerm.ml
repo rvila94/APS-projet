@@ -35,7 +35,7 @@ let print_arg a =
   match a with
       Arg(s, t) ->  (
         Printf.printf "(";
-        Printf.printf "%s"  s;
+        Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t;
         Printf.printf ")";
@@ -111,7 +111,7 @@ let rec print_stat s =
       )
     |  ASTSet(s, e) -> (
           Printf.printf("set(");
-          Printf.printf "%s"  s;
+          Printf.printf "\"%s\""  s;
           Printf.printf ",";
           print_expr(e);
           Printf.printf ")";
@@ -134,7 +134,7 @@ let rec print_stat s =
       )
     |  ASTCall(s, es) -> (
           Printf.printf("call(");
-          Printf.printf "%s"  s;
+          Printf.printf "\"%s\""  s;
           Printf.printf ",";
           print_exprs(es);
           Printf.printf ")";
@@ -144,7 +144,7 @@ and print_def d =
   match d with 
     ASTConst(s, t, e)     -> (
         Printf.printf "const(";
-        Printf.printf "%s"  s;
+        Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t; 
         Printf.printf ",";
@@ -153,7 +153,7 @@ and print_def d =
     )
   | ASTFun(s, t, a, e)    -> (
         Printf.printf "fun(";
-        Printf.printf "%s" s;
+        Printf.printf "\"%s\"" s;
         Printf.printf ",";
         print_type t;
         Printf.printf ",[" ;
@@ -164,7 +164,7 @@ and print_def d =
     )
   | ASTFunRec(s, t, a, e) -> (
         Printf.printf "funrec(";
-        Printf.printf "%s"  s;
+        Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t;
         Printf.printf ",[";
@@ -175,14 +175,14 @@ and print_def d =
     )
   | ASTVar(s, t) -> (
         Printf.printf "var(";
-        Printf.printf "%s"  s;
+        Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t; 
         Printf.printf ")";
   )
   | ASTProc(s, a, bk) -> (
         Printf.printf "proc(";
-        Printf.printf "%s" s;
+        Printf.printf "\"%s\"" s;
         Printf.printf ",";
         Printf.printf ",[";
         print_args a;
@@ -192,7 +192,7 @@ and print_def d =
     )
   | ASTProcRec(s, a, bk) -> (
         Printf.printf "procrec(";
-        Printf.printf "%s" s;
+        Printf.printf "\"%s\"" s;
         Printf.printf ",";
         Printf.printf ",[";
         print_args a;

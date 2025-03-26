@@ -34,7 +34,7 @@ let print_arg a =
   match a with
       Arg(s, t) ->  (
         Printf.printf "(";
-        Printf.printf "%s"  s;
+        Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t;
         Printf.printf ")";
@@ -113,7 +113,7 @@ let print_def d =
   match d with 
     ASTConst(s, t, e)     -> (
         Printf.printf "const(";
-        Printf.printf "%s"  s;
+        Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t; 
         Printf.printf ",";
@@ -122,7 +122,7 @@ let print_def d =
     )
   | ASTFun(s, t, a, e)    -> (
         Printf.printf "fun(";
-        Printf.printf "%s" s;
+        Printf.printf "\"%s\"" s;
         Printf.printf ",";
         print_type t;
         Printf.printf ",[" ;
@@ -133,7 +133,7 @@ let print_def d =
     )
   | ASTFunRec(s, t, a, e) -> (
         Printf.printf "funrec(";
-        Printf.printf "%s"  s;
+        Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t;
         Printf.printf ",[";
