@@ -1,1 +1,1 @@
-[ IF (lt 5 10) [ ECHO 1 ] [ ECHO 0 ] ]
+[ VAR x int; SET x 5; WHILE (lt 0 x) [ SET x (sub x 1) ]; ECHO x ]

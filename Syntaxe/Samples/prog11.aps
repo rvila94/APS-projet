@@ -1,4 +1,1 @@
-[
-FUN REC fib int [ x : int ] ( if (or ( lt x 1) ( eq x 1) ) 1 ( add ( fib ( sub x 1)) ( fib ( sub x 2))));
-ECHO ( fib 4 )
-]
+[ VAR x int; VAR y int; SET x 42; SET y 100; ECHO (add 42 100) ]

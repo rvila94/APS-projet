@@ -1,1 +1,0 @@
-[ PROC f [x:int, y:int] [ ECHO x; ECHO y ]; CALL f 1 2 ]

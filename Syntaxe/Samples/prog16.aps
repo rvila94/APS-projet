@@ -1,1 +1,1 @@
-[ VAR x int; SET x 5; WHILE (lt 0 x) [ SET x (sub x 1) ]; ECHO x ]
+[ PROC f [x:int, y:int] [ ECHO x; ECHO y ]; CALL f 1 2 ]

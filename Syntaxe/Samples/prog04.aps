@@ -1,0 +1,1 @@
+[ ECHO (add (mul 1 2) (sub (div 4 2) 1)) ]
