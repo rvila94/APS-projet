@@ -12,5 +12,7 @@ prog12.aps: Test ABS
 prog13.aps: Test VAR et SET
 prog14.aps: Test IF
 prog15.aps: Test WHILE
-prog16.aps: Test 
-prog17.aps: Test 
+prog16.aps: Test WHILE 2
+prog17.aps: Test PROC 
+prog18.aps: Test PROC 2
+prog19.aps: Test PROC REC

@@ -48,7 +48,7 @@ def:
 | FUN REC IDENT typee LBRA args RBRA expr   { ASTFunRec($3, $4, $6, $8) }
 | VAR IDENT typee                            { ASTVar($2, $3) }
 | PROC IDENT LBRA args RBRA block           { ASTProc($2, $4, $6) }
-| PROC REC IDENT LBRA args RBRA block       { ASTProc($3, $5, $7) }
+| PROC REC IDENT LBRA args RBRA block       { ASTProcRec($3, $5, $7) }
 
 typee :
   BOOL                          { Bool }
@@ -72,7 +72,7 @@ stat:
 | SET IDENT expr                { ASTSet($2, $3) }
 | IF2 expr block block          { ASTIf2($2, $3, $4) }
 | WHILE expr block              { ASTWhile($2, $3) }
-| CALL IDENT exprs               { ASTCall($2, $3) }
+| CALL IDENT exprs              { ASTCall($2, $3) }
 ;
 
 expr:

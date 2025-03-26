@@ -79,9 +79,9 @@ let rec print_expr e =
     | ASTApp(e1, es)    -> (
       Printf.printf "app(";
       print_expr e1;
-      Printf.printf ",";
+      Printf.printf ",[";
       print_exprs es;
-      Printf.printf ")";
+      Printf.printf "])";
       )
     | ASTAbs(args, e1)   -> (
       Printf.printf("abs([");
@@ -93,13 +93,11 @@ let rec print_expr e =
       
 and print_exprs es =
   match es with
-      ASTExpr(e) -> print_expr e
+      ASTExpr(e) -> print_expr e;
     | ASTExprs(e, es1) -> (
-        Printf.printf "[";
         print_expr e;
         Printf.printf ",";
         print_exprs es1;
-        Printf.printf "]";
       )
 
 let rec print_stat s =
@@ -135,9 +133,9 @@ let rec print_stat s =
     |  ASTCall(s, es) -> (
           Printf.printf("call(");
           Printf.printf "\"%s\""  s;
-          Printf.printf ",";
+          Printf.printf ",[";
           print_exprs(es);
-          Printf.printf ")";
+          Printf.printf "])";
       )
 
 and print_def d =
@@ -183,7 +181,6 @@ and print_def d =
   | ASTProc(s, a, bk) -> (
         Printf.printf "proc(";
         Printf.printf "\"%s\"" s;
-        Printf.printf ",";
         Printf.printf ",[";
         print_args a;
         Printf.printf "],";
@@ -191,9 +188,8 @@ and print_def d =
         Printf.printf ")";
     )
   | ASTProcRec(s, a, bk) -> (
-        Printf.printf "procrec(";
+        Printf.printf "procRec(";
         Printf.printf "\"%s\"" s;
-        Printf.printf ",";
         Printf.printf ",[";
         print_args a;
         Printf.printf "],";
