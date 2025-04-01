@@ -2,6 +2,7 @@ open Ast
 
 type valeur =
     InZ  of int
+  | InA  of adresse
   | InF  of expr * string list * environnement
   | InFR of expr * string * string list * environnement
   | InP  of cmds * string list * environnement
@@ -9,10 +10,10 @@ type valeur =
   | InPrim of (valeur list -> valeur)
 
 and environnement = (string * valeur) list
+and adresse = int
 
 type flux_sortie = int list
 
-type adresse = int
 type memoire = (adresse * valeur) list
 
 let alloc mem = 
@@ -93,7 +94,7 @@ let rec add_env id val0 env =
 let rec eval_expr expr env = 
   match expr with 
       ASTNum(n)           -> InZ(n)
-    | ASTId(s)            -> check_env s env
+    | ASTId(s)            -> (* TODO *)
     | ASTIf(e1, e2,e3)    ->
                      begin match (eval_expr e1 env) with
                         InZ(1) -> (eval_expr e2 env)
@@ -149,28 +150,28 @@ and apply f args =
         let new_env = List.fold_left2 (fun env param arg -> add_env param arg env) rec_env params args in
         eval_expr body new_env
 
-    | InP (cmds, params, env) -> (* TODO *)
+    | InP (cmds, params, env)         -> (* TODO *)
 
-    | InPR (cmds, fname, param, env) -> (* TODO *)
+    | InPR (cmds, fname, param, env)  -> (* TODO *)
 
-    | _ -> failwith "erreur: f n'est pas valide"
+    | _                               -> failwith "erreur: f n'est pas valide"
 
 
 let eval_stat s env flux =
   match s with
-      ASTEcho(e) ->
+      ASTEcho(e)          ->
               begin match (eval_expr e env) with
                   InZ(n) -> (n :: flux) 
                 | _      -> failwith "erreur: mauvais types, doit etre un entier"
               end
 
-    | ASTSet(x, e) -> (* TODO *)
+    | ASTSet(x, e)        -> (* TODO *)
 
-    | ASTIf2(e, b1, b2) -> (* TODO *)
+    | ASTIf2(e, b1, b2)   -> (* TODO *)
 
-    | ASTWhile(e, b) -> (* TODO *)
+    | ASTWhile(e, b)      -> (* TODO *)
     
-    | ASTCall(fname, es) -> (* TODO *)
+    | ASTCall(fname, es)  -> (* TODO *)
 
 
 let rec eval_def d env = 
@@ -179,7 +180,10 @@ let rec eval_def d env =
                     let v = eval_expr e env in
                     add_env x v env
 
-    | ASTVar(x, _) -> (* TODO *)
+    | ASTVar(x, _)                     -> 
+                    let (addr, new_mem) = alloc mem in
+                    let new_env = add_env x addr env in
+                    new_env, new_mem
 
     | ASTFun (fname, _, args, body)    ->
                     let params = extract_args_names args in
@@ -189,9 +193,9 @@ let rec eval_def d env =
         let params = extract_args_names args in
         add_env fname (InFR(body, fname, params, env)) env
 
-    | ASTProc(x, args, b) -> (* TODO *)
+    | ASTProc(x, args, b)              -> (* TODO *)
 
-    | ASTProcRec(x, args, b) -> (* TODO *)
+    | ASTProcRec(x, args, b)           -> (* TODO *)
     
 and eval_cmds cmds env flux =
   match cmds with
