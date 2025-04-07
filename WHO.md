@@ -13,5 +13,5 @@
 
 - **Nom :** ARLAIS  
 - **Prénom :** Julien  
-- **Numéro d'étudiant :**   
-- **E-mail :** 
+- **Numéro d'étudiant :** 28723564
+- **E-mail :** Julien.Arlais@etu.sorbonne-universite.fr
