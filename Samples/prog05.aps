@@ -1,1 +1,1 @@
-[ ECHO (if true 1 2) ]
+[ ECHO ( if (or true false) 1 2 ) ]

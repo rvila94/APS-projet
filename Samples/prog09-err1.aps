@@ -1,0 +1,7 @@
+[
+FUN REC f (int -> int) [ x : (int -> int), n : int ] 
+                        (if (eq n 0) 
+                            [y : bool]y
+                            [y : bool]( x ((f x (sub n 1)) y)));
+ECHO (( f [z : bool] (mul 2 z) 3) 1 )
+]

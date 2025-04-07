@@ -1,0 +1,6 @@
+[
+CONST i bool 3;
+CONST j int 2;
+FUN f int [ x : bool , y : int ] ( add x y );
+ECHO ( f i j )
+]

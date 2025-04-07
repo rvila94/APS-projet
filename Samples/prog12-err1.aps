@@ -1,0 +1,1 @@
+[ IF 3 [ ECHO 1 ] [ ECHO 0 ] ]

@@ -1,0 +1,1 @@
+[ VAR x bool; VAR y int; SET x 1; SET y 2; ECHO (add x y) ]
