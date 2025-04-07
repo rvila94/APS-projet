@@ -161,7 +161,7 @@ and print_def d =
         Printf.printf ")";
     )
   | ASTFunRec(s, t, a, e) -> (
-        Printf.printf "funrec(";
+        Printf.printf "funRec(";
         Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t;
