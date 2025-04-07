@@ -15,7 +15,7 @@ let rec print_type t =
     | Int            -> Printf.printf "int"
     | Void           -> Printf.printf "void"
     | ASTFlech(ts, t1)  -> (
-      Printf.printf "astflech";
+      Printf.printf "flech";
       Printf.printf "([";
       print_types ts;
       Printf.printf "],";

@@ -61,13 +61,12 @@ bt_def(G, fun(X, T, ARGS, E), Gfinal) :-
 
 % FunRec
 bt_def(G, funRec(X, T, ARGS, E), Gfinal) :- 
-    append(ARGS, G, G2),
-    bt_expr(G3, E, T),
-    Gfinal = [(X, Tflech) | G],
-    Tflech = flech(TS, T),
     extract_typeArgs(ARGS, TS),
-    G3 = [(X, Tflech) | G2].    % à tester de remplacer ca par append((X, Tflech), G2, G3)
-
+    Tflech = flech(TS, T), 
+    append([(X, Tflech)], ARGS, G2),
+    append(G2, G, G3),
+    bt_expr(G3, E, T),
+    Gfinal = [(X, Tflech) | G].
 
 % Var
 bt_def(G, var(X, T), [(X, T) | G]) :- 
