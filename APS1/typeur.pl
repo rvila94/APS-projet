@@ -118,7 +118,10 @@ bt_stat(G, call(X, ES)) :-
 bt_expr(_, void, void).
 
 % Num
-bt_expr(_, num(_), int).
+bt_expr(_, num(N), int).
+    % integer(N). 
+    number(N), 
+    N =:= floor(N).
 
 % Id
 bt_expr(G, id(X), T) :-
@@ -154,10 +157,12 @@ bt_expr(G, abs(ARGS, E), Tflech) :-
     extract_typeArgs(ARGS, TS).
 
 % main
-:- 
+:-
     read(P),
-    bt_prog(P).
+    ( bt_prog(P) ->
+        writeln('OK')
+    ; writeln('Type Error')
+    ),
+    halt.
 
-
-% exemple de commande: ./prologTerm ../Samples/prog0.aps | swipl typeur.pl
-% exemple commande dans prolog: bt_prog(prog([stat(echo(num(42)))])).
+% exemple de commande: ./prologTerm ../Samples/prog01.aps | swipl typeur.pl
