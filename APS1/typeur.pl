@@ -118,8 +118,8 @@ bt_stat(G, call(X, ES)) :-
 bt_expr(_, void, void).
 
 % Num
-bt_expr(_, num(N), int).
-    % integer(N). 
+bt_expr(_, num(N), int) :-
+    % integer(N).
     number(N), 
     N =:= floor(N).
 
