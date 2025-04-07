@@ -11,15 +11,15 @@ aps-projet/
 │   └── ... (meme fichiers que APS1)
 ├── APS1/
 │   ├── ast.ml              # Définition de la grammaire
-│   ├── eval.ml             # Évaluateur OCaml (WIP)
+│   ├── eval.ml             # Évaluateur Ocaml (WIP)
 │   ├── lexer.mll           # Analyseur lexical
 │   ├── Makefile            # Compilation des différents exécutables
 │   ├── parser.mly          # Analyseur syntaxique (grammaire)
-│   ├── prologTerm.ml       # Génère le Prolog à partir des fichiers test .aps
+│   ├── prologTerm.ml       # Génère le Prolog à partir d'un fichier test .aps
 │   ├── run.sh              # Script de test automatique (typeur + eval sur l'ensemble des tests)
 │   └── typeur.pl           # Typeur en Prolog
 └── Samples/
-    └── prog*.aps           # Fichiers de tests (corrects & erronés)
+    └── prog*.aps           # Fichiers des programmes APS tests (corrects & erronés)
 ```
 
 
@@ -27,7 +27,7 @@ aps-projet/
 
 ## Build
 
-Placez-vous dans le dossier **APS1** puis exécute :
+Placez-vous dans le dossier **APS1** puis exécutez :
 
 ```bash
 make
