@@ -15,7 +15,6 @@ do
         continue
     fi
     echo "Lancement de l'evaluateur..."
-    # TODO
-    #res=$(./eval $file)
-    #echo $res
+    res=$(./eval < $file)
+    echo $res
 done
