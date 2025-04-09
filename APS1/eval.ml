@@ -36,6 +36,8 @@ let rec check_mem addr mem =
 
 
 let initial_env =
+  let true_ = InZ(1) in
+  let false_ = InZ(0) in
   let not = InPrim (function
       [InZ(0)] -> InZ(1)
     | [InZ(1)] -> InZ(0)
@@ -66,7 +68,9 @@ let initial_env =
     | _ -> failwith "erreur: mauvais types, doivent etre des entiers"
   ) in
 
-  [("not", not);
+  [("true", true_);
+  ("false", false_);
+  ("not", not);
   ("eq", eq);
   ("lt", lt);
   ("add", add);
