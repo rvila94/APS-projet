@@ -169,6 +169,18 @@ and apply f args mem =
 
     | _                               -> failwith "erreur: f n'est pas valide"
 
+and apply_proc p args flux mem =
+  match p with 
+      InP (cmds, params, env') ->
+      let new_env = List.fold_left2 (fun e p a -> add_env p a e) env' params args in
+      eval_cmds cmds new_env flux mem
+
+    | InPR (cmds, fname, params, env') ->
+      let rec_env = add_env fname (InPR (cmds, fname, params, env')) env' in
+      let new_env = List.fold_left2 (fun e p a -> add_env p a e) rec_env params args in
+      eval_cmds cmds new_env flux mem
+
+    | _                               -> failwith "erreur: p n'est pas valide"
 
 and eval_stat s env flux mem =
   match s with
@@ -205,10 +217,10 @@ and eval_stat s env flux mem =
               end
     
     | ASTCall(fname, es)  -> 
-              let vf = check_env fname env in
+              let p = check_env fname env in
               let args = eval_exprs es env mem in
-              ignore (apply vf args mem);
-              (flux, mem)
+              apply_proc p args flux mem;
+
     (*begin match vf with
       | InP _ | InPR _ ->
           let (out_flux, out_mem) = apply vf args mem in
@@ -256,7 +268,8 @@ and eval_cmds cmds env flux mem =
   | ASTDef(d, cs)   -> 
                 let new_env, new_mem = eval_def d env mem in
                 eval_cmds cs new_env flux new_mem
-  | ASTStat2(s, cs) -> let (new_flux, new_mem) = (eval_stat s env flux mem) in
+  | ASTStat2(s, cs) -> 
+                let (new_flux, new_mem) = (eval_stat s env flux mem) in
                 eval_cmds cs env new_flux new_mem
 
 and eval_block b env flux mem =

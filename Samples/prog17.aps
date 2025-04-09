@@ -5,5 +5,5 @@
             CALL f (sub x 1) 
         ] [ ECHO 0 ] 
     ]; 
-    CALL f 1 
+    CALL f 5
 ]
