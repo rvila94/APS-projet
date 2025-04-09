@@ -1,9 +1,11 @@
 [ 
-    PROC REC f [x:int] [
-        IF ( lt 0 x ) [
-            ECHO x;
-            CALL f (sub x 1) 
-        ] [ ECHO 0 ] 
-    ]; 
-    CALL f 5
+PROC REC f [x:int] [
+    IF ( lt 0 x ) 
+    [
+        ECHO x;
+        CALL f (sub x 1) 
+    ] 
+    [ ECHO 0 ] 
+]; 
+CALL f 5
 ]

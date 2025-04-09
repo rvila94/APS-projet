@@ -1,1 +1,4 @@
-[ IF 3 [ ECHO 1 ] [ ECHO 0 ] ]
+[ 
+IF 3 
+    [ ECHO 1 ] [ ECHO 0 ] 
+]

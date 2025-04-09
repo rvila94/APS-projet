@@ -1,1 +1,8 @@
-[ VAR x int; SET x 5; WHILE 3 [ ECHO x; SET x (sub x 1) ] ]
+[ 
+VAR x int; 
+SET x 5; 
+WHILE 3 [ 
+    ECHO x; 
+    SET x (sub x 1) 
+] 
+]

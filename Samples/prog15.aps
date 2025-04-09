@@ -1,1 +1,8 @@
-[ PROC f [x:int] [ ECHO x; ECHO x ]; CALL f 1 ]
+[
+PROC f [x:int] 
+[ 
+    ECHO x; 
+    ECHO x 
+]; 
+CALL f 1 
+]
