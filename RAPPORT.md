@@ -18,10 +18,11 @@
 ## 3. Choix d'implémentation
 
 ### Gestion des primitives
-<!-- ... -->
+<!-- directement dans l'environnement initial, on n'utilise pas prim1 et prim2 contrairemebt a ce qui est fzit dans le cours  -->
 
 ### Gestion de la mémoire et du flux de sortie
-<!-- ... -->
+<!-- l'adresse est un entier, a chaque nouvelle adresse on veut que l'entier qui correspond a l'adresse cree soit incrementé pour que adresse(i+1) = adresse(i) + 1
+     etant donné que la memoire est une liste de paire (adresse, valeur), on utilise la taille de cette liste comme entier pour la nouvelle adresse  -->
 
 ### Environnement de typage
 <!-- inspirer de l'exemple prof donné en tme -->
