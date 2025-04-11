@@ -4,6 +4,10 @@ extract_typeArgs(ARGS, TS) :-
     TS = [T | TS2],
     extract_typeArgs(ARGS2, TS2).
 
+extract_typeArgsp([], []).
+extract_typeArgsp([(_, T) | ARGS], [T | TS]) :-
+    extract_typeArgsp(ARGS, TS).
+
 extract_typeExprs(_, [], []).
 extract_typeExprs(G, ES, TS) :- 
     ES = [E | ES2],
@@ -11,7 +15,10 @@ extract_typeExprs(G, ES, TS) :-
     bt_expr(G, E, T),
     extract_typeExprs(G, ES2, TS2).
 
-
+extract_typeExprsp(_, [], []).
+extract_typeExprsp(G, [E | ES], [T | TS]) :-
+    bt_exprp(G, E, T),
+    extract_typeExprsp(G, ES, TS).
 
 % Prog
 bt_prog(prog(CS)) :-
@@ -74,7 +81,7 @@ bt_def(G, var(X, T), [(X, T) | G]) :-
 
 % Proc
 bt_def(G, proc(X, Args, Block), Gfinal) :-
-    extract_typeArgs(Args, TS),
+    extract_typeArgsp(Args, TS),
     append(Args, G, G2),
     bt_block(G2, Block),
     Tflech = flech(TS, void),
@@ -82,7 +89,7 @@ bt_def(G, proc(X, Args, Block), Gfinal) :-
 
 % ProcRec
 bt_def(G, procRec(X, Args, Block), Gfinal) :-
-    extract_typeArgs(Args, TS),
+    extract_typeArgsp(Args, TS),
     Tflech = flech(TS, void),
     append([(X, Tflech) | Args], G, G2),
     bt_block(G2, Block),
@@ -110,7 +117,7 @@ bt_stat(G, whilee(E, Bk)) :-
 
 % Call
 bt_stat(G, call(X, ES)) :-
-    extract_typeExprs(G, ES, TS),
+    extract_typeExprsp(G, ES, TS),
     member((X, flech(TS, void)), G).
     
 % Void
@@ -166,6 +173,7 @@ bt_exprp(G, adr(X), T) :-
 % main
 :-
     read(P),
+    writeln(P),
     ( bt_prog(P) ->
         writeln('OK')
     ; writeln('Type Error')
