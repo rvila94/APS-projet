@@ -155,6 +155,14 @@ bt_expr(G, abs(ARGS, E), Tflech) :-
     Tflech = flech(TS, T),
     extract_typeArgs(ARGS, TS).
 
+% Expr
+bt_exprp(G, X, T) :-
+	bt_expr(G, X, T).
+
+% Adr
+bt_exprp(G, adr(X), T) :-
+	bt_expr(G, X, T).
+
 % main
 :-
     read(P),

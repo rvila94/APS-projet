@@ -59,7 +59,7 @@ let print_argp a =
         Printf.printf ")";
       )
     | ArgpVar(s, t) ->  (
-        Printf.printf "( var ";
+        Printf.printf "( ";
         Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t;
@@ -124,23 +124,23 @@ and print_exprs es =
         Printf.printf ",";
         print_exprs es1;
       )
-(* Faut-il changer l'ast pour adr ?
+
 let rec print_exprp e =
   match e with
       ASTExpr(exp) -> print_expr exp
     | ASTAdr(s)    -> 
         Printf.printf("adr(");
-        print_expr s;
+        Printf.printf "\"%s\"" s;
         Printf.printf ")";
 and print_exprsp es =
   match es with
-      ASTExpr(e) -> print_exprp e;
+      ASTExprp(e) -> print_exprp e;
     | ASTExprsp(e, es1) -> (
         print_exprp e;
         Printf.printf ",";
         print_exprsp es1;
       )
-*)
+
 let rec print_stat s =
   match s with
       ASTEcho e -> (
@@ -175,7 +175,7 @@ let rec print_stat s =
           Printf.printf("call(");
           Printf.printf "\"%s\""  s;
           Printf.printf ",[";
-          print_exprs(es);
+          print_exprsp(es);
           Printf.printf "])";
       )
 

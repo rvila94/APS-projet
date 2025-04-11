@@ -86,7 +86,8 @@ Chaque fichier `.aps` est un programme écrit dans un langage simplifié :
 | `prog12-err1.aps`, `prog13-err1.aps`, `prog14.aps` | Erreurs de typage : condition entiere (non booléenne) |
 | `prog15.aps`, `prog16.aps`, `prog17.aps` | Test `PROC` et `PROC REC`|
 | `prog15-err1.aps`, `prog16-err1.aps` | Erreurs de typage : mauvais nombre d'arguments |
-| `prog18.aps` | Typage passe mais erreurs lors de l'evaluateur pour APS1 |
+| `prog18-err1.aps` | Typage passe mais erreurs lors de l'evaluateur pour APS1 |
+| `prog18.aps` | Test `var` dans `PROC` |
 
 
 

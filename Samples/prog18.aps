@@ -1,4 +1,9 @@
 [
-CONST x int 0;
-SET x 42
+VAR x int;
+SET x 42;
+PROC p [var x:int]
+[
+    ECHO x
+];
+CALL p (adr x)
 ]

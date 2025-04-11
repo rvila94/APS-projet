@@ -81,7 +81,7 @@ stat:
 | SET IDENT expr                { ASTSet($2, $3) }
 | IF2 expr block block          { ASTIf2($2, $3, $4) }
 | WHILE expr block              { ASTWhile($2, $3) }
-| CALL IDENT exprs              { ASTCall($2, $3) }
+| CALL IDENT exprsp              { ASTCall($2, $3) }
 ;
 
 expr:

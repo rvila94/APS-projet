@@ -62,7 +62,7 @@ and stat =
 | ASTSet of string * expr
 | ASTIf2 of expr * block * block
 | ASTWhile of expr * block
-| ASTCall of string * exprs
+| ASTCall of string * exprsp
   
 and cmds =
   ASTStat of stat
