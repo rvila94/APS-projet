@@ -1,0 +1,9 @@
+[
+VAR x int;
+SET x 42;
+PROC f [y:int, var z:int]
+[
+    ECHO (add y z)
+];
+CALL f 8 (adr x)
+]

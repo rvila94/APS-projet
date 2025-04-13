@@ -1,0 +1,13 @@
+[
+VAR x int;
+SET x 5;
+PROC REC f [var y:int] [
+    IF ( lt 0 y ) 
+    [
+        ECHO y;
+        CALL f (sub y 1) 
+    ] 
+    [ ECHO 0 ] 
+]; 
+CALL f (adr x)
+]

@@ -1,9 +1,9 @@
 [
 VAR x int;
 SET x 42;
-PROC p [var x:int]
+PROC f [var x:int]
 [
     ECHO x
 ];
-CALL p (adr x)
+CALL f (adr x)
 ]
