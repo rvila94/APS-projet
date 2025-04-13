@@ -79,6 +79,17 @@ let rec extract_args_names args =
   match args with
       ASTArg (Arg (x, _)) -> [x]
     | ASTArgs (Arg (x, _), ags) -> x :: extract_args_names ags
+    
+
+let rec extract_argp_name argp =
+  match argp with
+      Argp (s, t) -> s
+    | ArgpVar (s, t) -> s
+    
+and extract_argsp_names argsp =
+  match argsp with
+      ASTArgp (argp) -> [extract_argp_name argp]
+    | ASTArgsp (argp, ags) -> (extract_argp_name argp) :: extract_argsp_names ags
 
 let rec check_env id env  : valeur=
   match env with
@@ -143,6 +154,19 @@ and eval_exprs exprs env mem =
   match exprs with
       ASTExpr(e)      -> [eval_expr e env mem]
     | ASTExprs(e, es) -> eval_expr e env mem :: eval_exprs es env mem
+    
+and eval_exprp exprp env mem = 
+  match exprp with 
+      ASTExpr(e) -> eval_expr e env mem
+    | ASTAdr(s)  -> begin match (check_env s env) with
+                  InA(addr) -> InA(addr)
+                | v         -> v
+               end
+      
+and eval_exprsp exprsp env mem =
+  match exprsp with
+      ASTExprp(e)      -> [eval_exprp e env mem]
+    | ASTExprsp(e, es) -> eval_exprp e env mem :: eval_exprsp es env mem
 
 and apply f args mem =
   match f with 
@@ -218,17 +242,8 @@ and eval_stat s env flux mem =
     
     | ASTCall(fname, es)  -> 
               let p = check_env fname env in
-              let args = eval_exprs es env mem in
+              let args = eval_exprsp es env mem in
               apply_proc p args flux mem;
-
-    (*begin match vf with
-      | InP _ | InPR _ ->
-          let (out_flux, out_mem) = apply vf args mem in
-          (flux @ out_flux, out_mem)
-      | _ ->
-          ignore (apply vf args mem);
-          (flux, mem)
-    end*)
 
 
                   
@@ -254,11 +269,11 @@ and eval_def d env mem =
                     add_env fname (InFR(body, fname, params, env)) env, mem
 
     | ASTProc(x, args, ASTBlock(b))    ->
-                    let params = extract_args_names args in
+                    let params = extract_argsp_names args in
                     add_env x (InP(b, params, env)) env, mem
 
     | ASTProcRec(x, args, ASTBlock(b))  -> 
-                    let params = extract_args_names args in
+                    let params = extract_argsp_names args in
                     add_env x (InPR(b, x, params, env)) env, mem
 
 
