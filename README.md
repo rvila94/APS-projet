@@ -87,7 +87,8 @@ Chaque fichier `.aps` est un programme écrit dans un langage simplifié :
 | `prog15.aps`, `prog16.aps`, `prog17.aps` | Test `PROC` et `PROC REC`|
 | `prog15-err1.aps`, `prog16-err1.aps` | Erreurs de typage : mauvais nombre d'arguments |
 | `prog18-err1.aps` | Typage passe mais erreurs lors de l'evaluateur pour APS1 |
-| `prog18.aps` | Test `var` dans `PROC` |
+| `prog18.aps`, `prog19.aps` | Test `var` et `adr` dans `PROC` |
+| `prog20.aps` | Test `var` et `adr` dans `PROC REC` |
 
 
 
@@ -105,7 +106,7 @@ Chaque fichier `.aps` est un programme écrit dans un langage simplifié :
 ## Auteurs
 
 - [VILA Rodrigo](https://github.com/rvila94)
-- Arlais Julien
+- [ARLAIS Julien](https://github.com/JulienArlais)
 
 ---
 
