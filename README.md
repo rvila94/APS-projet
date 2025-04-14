@@ -60,6 +60,16 @@ Ce script :
 3. Passe le terme généré à `typeur.pl`
 4. Lance `eval` si le typage est correct
 
+Pour lancer les tests individuellement :
+
+```bash
+./prologTerm ../Samples/progXX.aps | swipl typeur.pl
+```
+
+```bash
+./eval < ../Samples/progXX.aps
+```
+
 
 ---
 
@@ -86,7 +96,7 @@ Chaque fichier `.aps` est un programme écrit dans un langage simplifié :
 | `prog12-err1.aps`, `prog13-err1.aps`, `prog14.aps` | Erreurs de typage : condition entiere (non booléenne) |
 | `prog15.aps`, `prog16.aps`, `prog17.aps` | Test `PROC` et `PROC REC`|
 | `prog15-err1.aps`, `prog16-err1.aps` | Erreurs de typage : mauvais nombre d'arguments |
-| `prog18-err1.aps` | Typage passe mais erreurs lors de l'evaluateur pour APS1 |
+| `prog18-err1.aps` | Le typeur marche pour APS1 mais on ne veut plus que ce soit le cas pour APS1a (*Exemple Notes de cours* )|
 | `prog18.aps`, `prog19.aps` | Test `var` et `adr` dans `PROC` |
 | `prog20.aps` | Test `var` et `adr` dans `PROC REC` |
 
