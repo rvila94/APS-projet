@@ -14,13 +14,18 @@ let rec print_type t =
       Bool           -> Printf.printf "bool"
     | Int            -> Printf.printf "int"
     | ASTFlech(ts, t1)  -> (
-      Printf.printf "flech";
-      Printf.printf "([";
+      Printf.printf "flech([";
       print_types ts;
       Printf.printf "],";
       print_type t1;
       Printf.printf ")";
       )
+    | ASTVec(t)         -> (
+      Printf.printf "vec(";
+      print_type t;
+      Printf.printf ")";
+      )
+
 and print_types ts = 
     match ts with 
         ASTType(t)        -> print_type t
@@ -75,9 +80,9 @@ let rec print_argsp argsp =
 
 let rec print_expr e =
   match e with
-      ASTNum(n)         -> Printf.printf "num(%d)" n
-    | ASTId(x)          -> Printf.printf "id(\"%s\")" x
-    | ASTIf(e1, e2, e3) -> (
+      ASTNum(n)           -> Printf.printf "num(%d)" n
+    | ASTId(x)            -> Printf.printf "id(\"%s\")" x
+    | ASTIf(e1, e2, e3)   -> (
       Printf.printf("if(");
       print_expr e1;
       Printf.printf ",";
@@ -86,32 +91,58 @@ let rec print_expr e =
       print_expr e3;
       Printf.printf ")";
       )
-    | ASTOr(e1, e2)     -> (
+    | ASTOr(e1, e2)       -> (
       Printf.printf("or(");
       print_expr e1;
       Printf.printf ",";
       print_expr e2;
       Printf.printf(")");
       )
-    | ASTAnd(e1, e2)    -> (
+    | ASTAnd(e1, e2)      -> (
       Printf.printf("and(");
       print_expr e1;
       Printf.printf ",";
       print_expr e2;
       Printf.printf(")");
       )
-    | ASTApp(e1, es)    -> (
+    | ASTApp(e1, es)      -> (
       Printf.printf "app(";
       print_expr e1;
       Printf.printf ",[";
       print_exprs es;
       Printf.printf "])";
       )
-    | ASTAbs(args, e1)   -> (
+    | ASTAbs(args, e1)    -> (
       Printf.printf("abs([");
       print_args args;
       Printf.printf "],";
       print_expr e1;
+      Printf.printf ")";
+      )
+    | ASTAlloc(e)         -> (
+      Printf.printf("alloc(");
+      print_expr e;
+      Printf.printf ")";
+      )
+    | ASTLen(e)           -> (
+      Printf.printf("len(");
+      print_expr e;
+      Printf.printf ")";
+      )
+    | ASTNth(e1, e2)      -> (
+      Printf.printf("nth(");
+      print_expr e1;
+      Printf.printf ",";
+      print_expr e2;
+      Printf.printf ")";
+      )
+    | ASTVset(e1, e2, e3) -> (
+      Printf.printf("vset(");
+      print_expr e1;
+      Printf.printf ",";
+      print_expr e2;
+      Printf.printf ",";
+      print_expr e3;
       Printf.printf ")";
       )
       
@@ -147,9 +178,9 @@ let rec print_stat s =
           print_expr(e);
           Printf.printf(")")
       )
-    |  ASTSet(s, e) -> (
+    |  ASTSet(l, e) -> (
           Printf.printf("set(");
-          Printf.printf "\"%s\""  s;
+          print_lval l;
           Printf.printf ",";
           print_expr(e);
           Printf.printf ")";
@@ -177,6 +208,20 @@ let rec print_stat s =
           print_exprsp(es);
           Printf.printf "])";
       )
+
+and print_lval l =
+  match l with
+    ASTLvalId(s)     ->
+        Printf.printf("lvalId(");
+        Printf.printf "\"%s\"" s;
+        Printf.printf ")";
+  | ASTLvalNth(l, e) ->
+        Printf.printf("lvalNth(");
+        print_lval l;
+        Printf.printf ",";
+        print_expr e;
+        Printf.printf ")";
+    
 
 and print_def d =
   match d with 
@@ -211,14 +256,14 @@ and print_def d =
         print_expr e;
         Printf.printf ")";
     )
-  | ASTVar(s, t) -> (
+  | ASTVar(s, t)          -> (
         Printf.printf "var(";
         Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t; 
         Printf.printf ")";
   )
-  | ASTProc(s, a, bk) -> (
+  | ASTProc(s, a, bk)     -> (
         Printf.printf "proc(";
         Printf.printf "\"%s\"" s;
         Printf.printf ",[";
@@ -227,7 +272,7 @@ and print_def d =
         print_block bk;
         Printf.printf ")";
     )
-  | ASTProcRec(s, a, bk) -> (
+  | ASTProcRec(s, a, bk)  -> (
         Printf.printf "procRec(";
         Printf.printf "\"%s\"" s;
         Printf.printf ",[";
@@ -239,22 +284,22 @@ and print_def d =
 
 and print_cmds c =
   match c with
-      ASTStat s -> (
+      ASTStat s           -> (
         Printf.printf "stat(";
         print_stat s;
         Printf.printf ")";
         )
-      | ASTDef(d, cmds) -> ( 
+    | ASTDef(d, cmds)   -> ( 
         Printf.printf "def(";
-          print_def d; 
-          Printf.printf "),";
-          print_cmds cmds
+        print_def d; 
+        Printf.printf "),";
+        print_cmds cmds
         )
-      | ASTStat2(s, cmds) -> ( 
+    | ASTStat2(s, cmds) -> ( 
         Printf.printf "stat(";
-          print_stat s; 
-          Printf.printf "),";
-          print_cmds cmds
+        print_stat s; 
+        Printf.printf "),";
+        print_cmds cmds
         )
 
 and print_block bk =
