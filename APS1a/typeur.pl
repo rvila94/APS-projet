@@ -126,8 +126,15 @@ bt_stat(G, whilee(E, Bk)) :-
 
 % Call
 bt_stat(G, call(X, ES)) :-
-    extract_typeExprsp(G, ES, TS),
-    member((X, flech(TS, void)), G).
+    extract_typeExprsp(G, ES, TS0),
+    member((X, flech(TSRef, void)), G),
+    map_types_to_refs(TS0, TSRef).
+
+map_types_to_refs([], []).
+map_types_to_refs([T | TS], [ref(T) | TSRef]) :-
+    map_types_to_refs(TS, TSRef).
+map_types_to_refs([T | TS], [T | TSRef]) :-
+    map_types_to_refs(TS, TSRef).
     
 % Void
 bt_expr(_, void, void).
@@ -185,7 +192,7 @@ bt_exprp(G, adr(X), ref(T)) :-
 % main
 :-
     read(P),
-    writeln(P),
+    % writeln(P),
     ( bt_prog(P) ->
         writeln('OK')
     ; writeln('Type Error')
