@@ -59,7 +59,7 @@ let print_argp a =
         Printf.printf ")";
       )
     | ArgpVar(s, t) ->  (
-        Printf.printf "(";
+        Printf.printf "var(";
         Printf.printf "\"%s\""  s;
         Printf.printf ",";
         print_type t;

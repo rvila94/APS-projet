@@ -20,6 +20,12 @@ extract_typeExprsp(G, [E | ES], [T | TS]) :-
     bt_exprp(G, E, T),
     extract_typeExprsp(G, ES, TS).
 
+transform_args([], []).
+transform_args([var(X, T) | Rest], [(X, ref(T)) | RestT]) :-
+    transform_args(Rest, RestT).
+transform_args([(X, T) | Rest], [(X, T) | RestT]) :-
+    transform_args(Rest, RestT).
+
 % Prog
 bt_prog(prog(CS)) :-
     is_init_env(G),
@@ -76,22 +82,25 @@ bt_def(G, funRec(X, T, ARGS, E), Gfinal) :-
     Gfinal = [(X, Tflech) | G].
 
 % Var
-bt_def(G, var(X, T), [(X, T) | G]) :- 
+bt_def(G, var(X, T), [(X, ref(T)) | G]) :-
     member(T, [int, bool]).
 
 % Proc
 bt_def(G, proc(X, Args, Block), Gfinal) :-
-    extract_typeArgsp(Args, TS),
-    append(Args, G, G2),
+    transform_args(Args, Args2),
+    extract_typeArgs(Args2, TS),
+    append(Args2, G, G2),
     bt_block(G2, Block),
     Tflech = flech(TS, void),
     Gfinal = [(X, Tflech) | G].
 
 % ProcRec
 bt_def(G, procRec(X, Args, Block), Gfinal) :-
-    extract_typeArgsp(Args, TS),
+    transform_args(Args, Args2),
+    extract_typeArgs(Args2, TS),
     Tflech = flech(TS, void),
-    append([(X, Tflech) | Args], G, G2),
+    transform_args(Args, Args2),
+    append([(X, Tflech) | Args2], G, G2),
     bt_block(G2, Block),
     Gfinal = [(X, Tflech) | G].
 
@@ -101,8 +110,8 @@ bt_stat(G, echo(E)) :-
 
 % Set
 bt_stat(G, set(X, E)) :-
-    member((X, T), G),
-    bt_expr(G, E, T). 
+    member((X, ref(T)), G),
+    bt_expr(G, E, T).
 
 % If2
 bt_stat(G, if2(E, Bk1, Bk2)) :-
@@ -133,6 +142,9 @@ bt_expr(_, num(N), int) :-
 bt_expr(G, id(X), T) :-
     member((X,T), G ).
 
+bt_expr(G, id(X), T) :-
+    member((X, ref(T)), G).
+
 % If
 bt_expr(G, if(E1, E2, E3), T) :-
     bt_expr(G, E1, bool),
@@ -162,13 +174,13 @@ bt_expr(G, abs(ARGS, E), Tflech) :-
     Tflech = flech(TS, T),
     extract_typeArgs(ARGS, TS).
 
-% Expr
+% Val
 bt_exprp(G, X, T) :-
 	bt_expr(G, X, T).
 
-% Adr
-bt_exprp(G, adr(X), T) :-
-	bt_expr(G, X, T).
+% Ref
+bt_exprp(G, adr(X), ref(T)) :-
+    member((X, ref(T)), G).
 
 % main
 :-
