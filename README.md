@@ -99,6 +99,9 @@ Chaque fichier `.aps` est un programme écrit dans un langage simplifié :
 | `prog18-err1.aps` | Le typeur marche pour APS1 mais on ne veut plus que ce soit le cas pour APS1a (*Exemple Notes de cours* )|
 | `prog18.aps`, `prog19.aps` | Test `var` et `adr` dans `PROC` |
 | `prog20.aps` | Test `var` et `adr` dans `PROC REC` |
+| `prog21.aps` | Test `vec`, `alloc` et `nth` |
+| `prog22.aps` | Test `vec`, `alloc` et `len` |
+| `prog23.aps` | Tests tableaux dans `PROC` |
 
 
 
