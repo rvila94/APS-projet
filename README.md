@@ -18,6 +18,10 @@ aps-projet/
 │   ├── prologTerm.ml       # Génère le Prolog à partir d'un fichier test .aps
 │   ├── run.sh              # Script de test automatique (typeur + eval sur l'ensemble des tests)
 │   └── typeur.pl           # Typeur en Prolog
+├── APS1a/
+│   └── ...
+├── APS2/
+│   └── ...
 └── Samples/
     └── prog*.aps           # Fichiers des programmes APS tests (corrects & erronés)
 ```
@@ -27,7 +31,7 @@ aps-projet/
 
 ## Build
 
-Placez-vous dans le dossier **APS1** puis exécutez :
+Placez-vous dans un dossier **APS** (hors APS0) puis exécutez :
 
 ```bash
 make
