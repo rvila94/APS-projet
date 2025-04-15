@@ -25,7 +25,7 @@ L’évaluateur, quant à lui, n’a pas encore été implémenté pour cette ve
 ### Fonctionnalités non encore fonctionnelles ou à corriger
 
 - **APS2**  
-  Le typeur n'est pas encore tout a fait fonxtionnel.
+  Le typeur n'est pas encore tout a fait fonctionnel.
 
 ---
 
