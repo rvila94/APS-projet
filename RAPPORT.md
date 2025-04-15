@@ -2,7 +2,9 @@
 
 ## 1. Avancement
 
-<!-- APS1a WIP -->
+À ce stade du projet, nous avons bien entamé la version APS2. 
+Le travail sur le typeur est bien avancé : l’essentiel de la logique est en place et permet de traiter correctement la majorité des cas de figure attendus. 
+L’évaluateur, quant à lui, n’a pas encore été implémenté pour cette version.
 
 ---
 
@@ -18,12 +20,12 @@
   L’évaluateur et le typeur fonctionnent correctement selon l'ensemble de nos tests.
 
 - **APS1a**  
-  [WIP]
+  L’évaluateur et le typeur fonctionnent correctement selon l'ensemble de nos tests.  
 
 ### Fonctionnalités non encore fonctionnelles ou à corriger
 
-- **APS1a**  
-  [WIP]
+- **APS2**  
+  Le typeur n'est pas encore tout a fait fonxtionnel.
 
 ---
 
