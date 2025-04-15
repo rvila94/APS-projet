@@ -109,9 +109,14 @@ bt_stat(G, echo(E)) :-
     bt_expr(G, E, int).
 
 % Set
-bt_stat(G, set(X, E)) :-
-    bt_expr(G, X, T),
+bt_stat(G, set(id(X), E)) :-
+    member((X, ref(T)), G),
     bt_expr(G, E, T).
+
+bt_stat(G, set(nth(E1, E2), E3)) :-
+    bt_expr(G, E1, vec(T)),
+    bt_expr(G, E2, int),
+    bt_expr(G, E3, T).
 
 bt_stat(G, set(X, E)) :-
     member((X, ref(T)), G),
