@@ -110,8 +110,12 @@ bt_stat(G, echo(E)) :-
 
 % Set
 bt_stat(G, set(X, E)) :-
-    member((X, ref(T)), G),
+    bt_expr(G, X, T),
     bt_expr(G, E, T).
+
+% bt_stat(G, set(X, E)) :-
+%    member((X, ref(T)), G),
+%    bt_expr(G, E, T).
 
 % If2
 bt_stat(G, if2(E, Bk1, Bk2)) :-
@@ -180,6 +184,25 @@ bt_expr(G, abs(ARGS, E), Tflech) :-
     bt_expr(G2, E, T),
     Tflech = flech(TS, T),
     extract_typeArgs(ARGS, TS).
+
+% alloc
+bt_expr(G,alloc(E),vec(_)) :- 
+	bt_expr(G,E,int).
+
+% Len
+bt_expr(G,len(E),int) :- 
+	bt_expr(G,E,vec(_)).
+
+% Nth
+bt_expr(G,nth(E1,E2),T) :-
+	bt_expr(G,E1,vec(T)),
+	bt_expr(G,E2,int).
+
+% Vset
+bt_expr(G, vset(E1, E2, E3), vec(T)) :-
+    bt_expr(G,E1,vec(T)),
+    bt_expr(G,E2,int),
+    bt_expr(G,E3,T).
 
 % Val
 bt_exprp(G, X, T) :-
