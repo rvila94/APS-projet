@@ -212,11 +212,11 @@ let rec print_stat s =
 and print_lval l =
   match l with
     ASTLvalId(s)     ->
-        Printf.printf("lvalId(");
+        Printf.printf("id(");
         Printf.printf "\"%s\"" s;
         Printf.printf ")";
   | ASTLvalNth(l, e) ->
-        Printf.printf("lvalNth(");
+        Printf.printf("nth(");
         print_lval l;
         Printf.printf ",";
         print_expr e;
