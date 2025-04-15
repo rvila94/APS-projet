@@ -113,9 +113,9 @@ bt_stat(G, set(X, E)) :-
     bt_expr(G, X, T),
     bt_expr(G, E, T).
 
-% bt_stat(G, set(X, E)) :-
-%    member((X, ref(T)), G),
-%    bt_expr(G, E, T).
+bt_stat(G, set(X, E)) :-
+    member((X, ref(T)), G),
+    bt_expr(G, E, T).
 
 % If2
 bt_stat(G, if2(E, Bk1, Bk2)) :-
