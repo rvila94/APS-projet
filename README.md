@@ -64,6 +64,8 @@ Ce script :
 3. Passe le terme généré à `typeur.pl`
 4. Lance `eval` si le typage est correct
 
+Note : Le typage est volontairement incorrect pour les tests "-err".
+
 Pour lancer les tests individuellement :
 
 ```bash
@@ -97,7 +99,7 @@ Chaque fichier `.aps` est un programme écrit dans un langage simplifié :
 | `prog11.aps` | Test `VAR` et `SET` |
 | `prog11-err1.aps` | Erreurs de typage : affectation d'un entier à une variable booléenne |
 | `prog12.aps`, `prog13.aps`, `prog14.aps` | Test `IF` et `WHILE` |
-| `prog12-err1.aps`, `prog13-err1.aps`, `prog14.aps` | Erreurs de typage : condition entiere (non booléenne) |
+| `prog12-err1.aps`, `prog13-err1.aps`, `prog14-err1.aps` | Erreurs de typage : condition entiere (non booléenne) |
 | `prog15.aps`, `prog16.aps`, `prog17.aps` | Test `PROC` et `PROC REC`|
 | `prog15-err1.aps`, `prog16-err1.aps` | Erreurs de typage : mauvais nombre d'arguments |
 | `prog18-err1.aps` | Erreur de typage : Le typeur marche pour APS1 mais on ne veut plus que ce soit le cas pour APS1a (*Exemple Notes de cours* )|
@@ -108,16 +110,6 @@ Chaque fichier `.aps` est un programme écrit dans un langage simplifié :
 | `prog23.aps` | Test `alloc`, `nth` et `vset` |
 | `prog24.aps` | Test tableau dans `PROC` |
 | `prog25.aps` | Second test dans `PROC` (*annale ER2 2018* ) |
-
-
-
----
-
-## Work in Progress
-
-- Completer/corriger `eval.ml`
-- Affichage des valeurs retournées pour chaque test
-- Écriture de tests supplémentaires afin de fortifiser notre base de tests
 
 
 ---
