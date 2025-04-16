@@ -1,6 +1,4 @@
 [
-CONST tab (vec int) (alloc 2);
-SET (nth tab 0) 10;
-SET (nth tab 1) 2;
-ECHO (add (nth tab 0) (nth tab 1))
+CONST tab (vec int) (alloc 3);
+ECHO (len tab)
 ]

@@ -8,6 +8,7 @@ type valeur =
   | InP  of cmds * string list * environnement
   | InPR of cmds * string * string list * environnement
   | InPrim of (valeur list -> valeur)
+  | InB of adresse * int
 
 and environnement = (string * valeur) list
 and adresse = int
@@ -153,7 +154,47 @@ let rec eval_expr expr env mem =
                     apply f args mem
 
     | ASTAbs(args, e)     ->  InF (e, extract_args_names args, env)
+    
+    | ASTAlloc(e) ->
+                    begin match eval_expr e env mem with
+                      InZ(n) when n >= 0 ->
+                        let rec alloc_n k mem acc =
+                          if k = 0 then (acc, mem)
+                          else
+                            let (addr, new_mem) = alloc mem in
+                            alloc_n (k-1) new_mem (addr :: acc) in
+                            let (addresses, _) = alloc_n n mem [] in
+                            let base_addr = List.hd (List.rev addresses) in
+                            InB (base_addr, n)
+                    | InZ(_) -> failwith "erreur: entier negatif"
+                    | _      -> failwith "erreur: mauvais type"
+                    end
+    
+    | ASTLen(e) ->
+                    begin match eval_expr e env mem with
+                      InB(_, taille) -> InZ(taille)
+                    | _              -> failwith "erreur: mauvais type"
+                    end
+    
+    | ASTNth(e1, e2) ->
+                    begin match eval_expr e1 env mem, eval_expr e2 env mem with
+                      InB(addr, s), InZ(i) ->
+                        if i < 0 || i >= s then failwith "erreur: indice i hors du tableau"
+                        else check_mem (addr + i) mem
+                    | _, _ -> failwith "erreur: mauvais types"
+                    end
 
+    | ASTVset(e1, e2, e3) ->
+                    begin match eval_expr e1 env mem, eval_expr e2 env mem with
+                      InB(addr, s), InZ(i) ->
+                        if i < 0 || i >= s then failwith "erreur: indice i hors du tableau"
+                        else
+                          let value = eval_expr e3 env mem in
+                          let _ = modif_mem (addr + i) value mem in
+                          value
+                    | _, _ -> failwith "erreur: mauvais types"
+                    end
+                    
 and eval_exprs exprs env mem =
   match exprs with
       ASTExpr(e)      -> [eval_expr e env mem]
@@ -209,6 +250,29 @@ and apply_proc p args flux mem =
       eval_cmds cmds new_env flux mem
 
     | _                               -> failwith "erreur: p n'est pas valide"
+    
+and eval_lval expr env mem =
+  match expr with
+    ASTLvalId(id) ->
+         begin match check_env id env with
+          | InA(addr) -> InA(addr)
+          | InB(a, n) -> InB(a, n)
+          | _ -> failwith "erreur: mauvais type"
+         end
+         
+  | ASTLvalNth(lv, e) -> 
+      begin match eval_lval lv env mem with
+        InB(addr, n) -> (
+          match eval_expr e env mem with
+            InZ(x) -> (
+              match check_mem (addr + x) mem with
+                InB(a, n) -> InB(a, n)
+              | _ -> InA(addr + x)
+            )
+          | _ -> failwith "erreur: mauvais type"
+        )
+      | _ -> failwith "erreur: mauvais type"
+      end
 
 and eval_stat s env flux mem =
   match s with
@@ -219,14 +283,16 @@ and eval_stat s env flux mem =
               end
 
     | ASTSet(x, e) ->
-              begin match (check_env x env) with
-                  InA(addr) -> 
-                      let affectation = eval_expr e env mem in
-                      let new_mem = modif_mem addr affectation mem in
-                      flux, new_mem
-                | _         -> failwith "erreur: adresse non valide"
+              begin match eval_expr e env mem with
+                  InZ(n) -> 
+                    begin match eval_lval x env mem with
+                      InA(addr) ->
+                        let new_mem = modif_mem addr (InZ n) mem in
+                        (flux, new_mem)
+                    | _ -> failwith "erreur: mauvais type"
+                    end
+                 | _ -> failwith "erreur: mauvais type"
               end
-        
 
     | ASTIf2(e, bk1, bk2)   -> 
               begin match (eval_expr e env mem) with
@@ -248,10 +314,6 @@ and eval_stat s env flux mem =
               let p = check_env fname env in
               let args = eval_exprsp es env mem in
               apply_proc p args flux mem;
-
-
-                  
-
 
 and eval_def d env mem = 
   match d with
@@ -300,8 +362,6 @@ let eval_prog p =
       ASTProg(b) -> 
               let flux, _ = (eval_block b initial_env [] []) in
               List.iter (function x -> Printf.printf "%d\n" x) (List.rev flux)
-         
-  
 
 
 

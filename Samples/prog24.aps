@@ -1,0 +1,23 @@
+[
+PROC fill [tab:(vec int)] [
+    VAR x int;
+    SET x 0;
+    WHILE ( lt x (len tab) ) 
+    [
+        SET x (add x 1);
+        SET (nth tab x) x
+    ] 
+]; 
+PROC print [tab:(vec int)] [
+    VAR x int;
+    SET x 0;
+    WHILE ( lt x (len tab) ) 
+    [
+        ECHO (nth tab x);
+        SET x (add x 1)
+    ] 
+]; 
+CONST tab (vec int) (alloc 3);
+CALL fill tab;
+CALL print tab
+]

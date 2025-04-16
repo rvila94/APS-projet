@@ -100,12 +100,14 @@ Chaque fichier `.aps` est un programme écrit dans un langage simplifié :
 | `prog12-err1.aps`, `prog13-err1.aps`, `prog14.aps` | Erreurs de typage : condition entiere (non booléenne) |
 | `prog15.aps`, `prog16.aps`, `prog17.aps` | Test `PROC` et `PROC REC`|
 | `prog15-err1.aps`, `prog16-err1.aps` | Erreurs de typage : mauvais nombre d'arguments |
-| `prog18-err1.aps` | Le typeur marche pour APS1 mais on ne veut plus que ce soit le cas pour APS1a (*Exemple Notes de cours* )|
+| `prog18-err1.aps` | Erreur de typage : Le typeur marche pour APS1 mais on ne veut plus que ce soit le cas pour APS1a (*Exemple Notes de cours* )|
 | `prog18.aps`, `prog19.aps` | Test `var` et `adr` dans `PROC` |
 | `prog20.aps` | Test `var` et `adr` dans `PROC REC` |
-| `prog21.aps` | Test `vec`, `alloc` et `nth` |
-| `prog22.aps` | Test `vec`, `alloc` et `len` |
-| `prog23.aps` | Tests tableaux dans `PROC` |
+| `prog21.aps` | Test `alloc` et `len` |
+| `prog22.aps` | Test `alloc` et `nth` |
+| `prog23.aps` | Test `alloc`, `nth` et `vset` |
+| `prog24.aps` | Test tableau dans `PROC` |
+| `prog25.aps` | Second test dans `PROC` (*annale ER2 2018* ) |
 
 
 
